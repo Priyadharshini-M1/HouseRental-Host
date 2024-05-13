@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css'
 import HouseA from './HouseA.png';
 import HouseB from './HouseB.jpg';
@@ -85,6 +86,7 @@ const housesData = [
   }
 ];
 const Home = () => {
+  const navigate = useNavigate();
     const [favoriteHouses, setFavoriteHouses] = useState([]);
     const [showFavorites, setShowFavorites] = useState(false);
   
@@ -94,6 +96,10 @@ const Home = () => {
         setFavoriteHouses([...favoriteHouses, houseToAdd]);
       }
     };
+
+    const handleBook = () =>{
+      navigate('/Book');
+    }
   
     return (
       <div className="login-container">
@@ -129,7 +135,7 @@ const Home = () => {
                   <p>{house.description}</p>
                   <p>Price: {house.price}</p>
                   <button onClick={() => addToFavorites(house.id)}>Add to Favorites</button>
-                  <button>Book</button>
+                  <button onClick={handleBook}>Book</button>
                 </div>
               </div>
             ))

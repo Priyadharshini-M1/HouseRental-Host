@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Widget, addResponseMessage } from 'react-chat-widget';
+import 'react-chat-widget/lib/styles.css';
 import HouseA from './HouseA.png';
 import HouseB from './HouseB.jpg';
 import HouseC from './House C.jpeg';
@@ -9,25 +11,24 @@ import HouseF from './HouseF.png';
 import HouseG from './HouseG.jpg';
 import HouseH from './HouseH.jpg';
 import HouseI from './HouseI.jpeg';
-import HouseJ from './HouseJ.webp';// Import HouseA.png from your file structure
-import './Login.css'; // Import CSS file for styling
+import HouseJ from './HouseJ.webp';
+import './Login.css';
 
 const houses = [
   {
     id: 1,
     name: 'House A',
-    image: HouseA, // Use the imported image directly
+    image: HouseA,
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     price: '$1000/month'
   },
   {
     id: 2,
     name: 'House B',
-    image: HouseB, // Placeholder for HouseB image
+    image: HouseB,
     description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     price: '$1200/month'
   },
-  // Add more house objects as needed
   {
     id: 3,
     name: 'House C',
@@ -87,32 +88,65 @@ const houses = [
 ];
 
 const Login = () => {
-
   const navigate = useNavigate();
+  const [showChat, setShowChat] = useState(false);
+
   const handleFavorite = (houseId) => {
-    // Logic to add house to favorites
-    navigate('/LoginForm')
+    navigate('/LoginForm');
   };
 
   const handleBook = (houseId) => {
-    // Logic to book the house
-    navigate('/LoginForm')
+    navigate('/LoginForm');
   };
 
-  const hanleLOGIN = () =>{
-    navigate('/LoginForm')
-  }
-  const handleSIGNUP  = () =>{
-    navigate('/Signup')
-  }
+  const handleButton = (houseName) => {
+    if (!houseName) {
+      addResponseMessage('Please specify the house name.'); // Prompt the user to specify the house name
+      return;
+    }
+  
+    const house = houses.find((h) => h.name.toLowerCase() === houseName.toLowerCase()); // Use case-insensitive comparison
+    if (house) {
+      const message = `${house.name} Details:\n${house.description}\nPrice: ${house.price}`;
+      addResponseMessage(message);
+    } else {
+      addResponseMessage(`Sorry, details for ${houseName} are not available.`);
+    }
+  };
+  
+  const handleNewUserMessage = (newMessage) => {
+    if (typeof newMessage === 'string') {
+      const trimmedMessage = newMessage.trim().toLowerCase();
+      if (trimmedMessage === 'hello' || trimmedMessage === 'hi') {
+        addResponseMessage('Hi there! How can I assist you today?');
+      } else if (trimmedMessage === 'house details' || trimmedMessage === 'amount' || trimmedMessage === 'location') {
+        addResponseMessage('Please specify the house name.'); // Prompt the user to specify the house name
+      } else {
+        handleButton(trimmedMessage); // Pass the trimmedMessage as houseName argument
+      }
+    } else {
+      addResponseMessage("Please enter a valid text message.");
+    }
+  };
+  
+
+
+
 
   return (
     <div className="login-container">
       <div className="header">
         <div className="project-name">easystay</div>
         <div className="auth-buttons">
-          <button className="login-button" onClick={hanleLOGIN}>Login</button>
-          <button className="signup-button" onClick={handleSIGNUP}>Signup</button>
+          <button className="login-button" onClick={() => navigate('/LoginForm')}>
+            Login
+          </button>
+          <button className="signup-button" onClick={() => navigate('/Signup')}>
+            Signup
+          </button>
+          <button className="chat-button" onClick={() => setShowChat(!showChat)}>
+            {showChat ? 'Close Chat' : 'Open Chat'}
+          </button>
         </div>
       </div>
       <div className="main-body">
@@ -129,6 +163,15 @@ const Login = () => {
           </div>
         ))}
       </div>
+      {showChat && (
+        <Widget
+          handleNewUserMessage={handleNewUserMessage}
+          title="Chat Bot"
+          subtitle="Ask any questions!"
+          senderPlaceHolder="Type your message here..."
+          showCloseButton={true}
+        />
+      )}
     </div>
   );
 };

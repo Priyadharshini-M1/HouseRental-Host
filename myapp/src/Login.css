@@ -94,6 +94,7 @@
   
   .house-details button {
     padding: 8px 16px;
+    margin-right: 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
