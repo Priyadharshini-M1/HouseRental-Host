@@ -26,7 +26,7 @@ const Book = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/book', {
+      const response = await fetch('/book', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

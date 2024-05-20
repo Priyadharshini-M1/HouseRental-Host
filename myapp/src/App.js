@@ -6,6 +6,11 @@ import Signup from './Signup';
 import Home from './Home';
 import Book from './Book';
 
+axios.defaults.baseURL = "https://2972-16-171-12-189.ngrok-free.app";
+axios.defaults.headers = {
+  "Content-Type" : "application/json","ngrok-skip-browser-warning":"69420",
+};
+
 function App() {
   return (
     <BrowserRouter>
